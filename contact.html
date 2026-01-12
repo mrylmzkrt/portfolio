@@ -257,21 +257,9 @@
                 <p>Have a project in mind or just want to say hello? I'm always open to discussing new ideas and opportunities.</p>
             </div>
 
-            <!-- FORMSUBMIT ENTEGRASYONU -->
-            <form action="https://formsubmit.co/yilmazkart@icloud.com" method="POST">
+            <!-- FORMSUBMIT AJAX ENTEGRASYONU -->
+            <form id="contact-form">
                 
-                <!-- YÖNLENDİRME (REDIRECT) AYARI -->
-                <input type="hidden" name="_next" value="https://mrylmzkrt.github.io/thank-you.html">
-                
-                <!-- Konu Başlığı -->
-                <input type="hidden" name="_subject" value="New Portfolio Contact Message!">
-                
-                <!-- Spam Koruması -->
-                <input type="hidden" name="_captcha" value="false">
-
-                <!-- Template -->
-                <input type="hidden" name="_template" value="table">
-
                 <div class="form-group">
                     <label class="form-label">Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Your Name" required>
@@ -329,6 +317,41 @@
             } else {
                 header.classList.remove('scrolled');
             }
+        });
+
+        // --- FORM GÖNDERME İŞLEMİ (AJAX ile) ---
+        const form = document.getElementById("contact-form");
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault(); // Sayfa yenilenmesini engelle
+
+            const submitBtn = document.querySelector(".btn-submit");
+            const originalBtnText = submitBtn.innerText;
+            submitBtn.innerText = "Sending...";
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+
+            // FormSubmit AJAX endpoint
+            fetch("https://formsubmit.co/ajax/yilmazkart@icloud.com", {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Başarılı olduğunda kendi thank-you sayfana yönlendir
+                window.location.href = "thank-you.html";
+            })
+            .catch(error => {
+                console.log(error);
+                alert("Bir hata oluştu. Lütfen daha sonra tekrar deneyin veya doğrudan mail atın.");
+                submitBtn.innerText = originalBtnText;
+                submitBtn.disabled = false;
+            });
         });
 
         // --- TECH GRID ANIMATION ---
