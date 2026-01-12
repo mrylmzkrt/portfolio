@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emre Yılmazkart | The Stamp Collection</title>
+    
+    <!-- Fontlar -->
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ORTAK CSS (TECH THEME) --- */
+        :root { --bg-main: #0D0D0D; --bg-card: #1A1A1A; --accent: #EAFF00; --text-main: #FFFFFF; --text-muted: #B3B3B3; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; line-height: 1.6; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        /* --- BACKGROUND --- */
+        #bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-color: var(--bg-main); 
+        }
+        #bg-animation { width: 100%; height: 100%; opacity: 0.6; }
+
+        /* --- HEADER --- */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: transparent; position: sticky; top: 0; z-index: 1000; transition: all 0.4s ease-in-out;}
+        header.scrolled { background: rgba(13, 13, 13, 0.9); backdrop-filter: blur(15px); padding: 15px 5%; border-bottom: 1px solid #333; }
+        .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; }
+        
+        /* Hamburger Menü */
+        .hamburger { display: none; cursor: pointer; z-index: 1001; }
+        .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: #fff; }
+
+        /* Masaüstü Menü */
+        nav ul { display: flex; list-style: none; gap: 20px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 30px; backdrop-filter: blur(5px); transition: 0.3s; }
+        nav a { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+        nav a:hover, nav a.active { color: var(--accent); }
+
+        .mobile-motto { display: none; }
+
+        /* --- PROJECT DETAIL CONTENT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 100px 5% 60px; z-index: 2; position: relative; }
+        
+        .back-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
+        .back-link:hover { color: var(--accent); }
+
+        /* Başlık Alanı */
+        .project-header { margin-bottom: 50px; }
+        .project-title { font-size: 3.5rem; color: #fff; line-height: 1.1; margin-bottom: 10px; }
+        .project-subtitle { font-size: 1.2rem; color: var(--accent); font-weight: 300; letter-spacing: 1px; }
+
+        /* Ana Görsel (Kapak) */
+        .hero-image {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 60px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #111;
+        }
+        .hero-image img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+        /* Proje Bilgileri Grid */
+        .project-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        /* Sol: Künye */
+        .info-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            height: fit-content;
+        }
+        .info-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .info-item:last-child { border: none; margin: 0; padding: 0; }
+        .info-label { display: block; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .info-value { color: #fff; font-size: 1.1rem; }
+
+        /* Sağ: Metin */
+        .project-description h3 { font-size: 1.8rem; color: #fff; margin-bottom: 20px; }
+        .project-description p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 20px; line-height: 1.8; }
+
+        /* --- GÜNCELLENEN GALERİ SİSTEMİ --- */
+        /* Pulların tamamını görmek için masonry (sütun) yapısı veya esnek grid kullanılır */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            align-items: start; /* Öğeleri en üstten hizalar, böylece boy farkları kırpılmaz */
+            margin-top: 50px;
+        }
+        .gallery-item {
+            height: auto; /* Sabit yükseklik kaldırıldı */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            background-color: transparent; /* Kırpılma olmadığı için arka plana ihtiyaç azaldı */
+            transition: 0.4s ease;
+        }
+        .gallery-item img { 
+            width: 100%; 
+            height: auto; /* Görselin tamamı görünür */
+            display: block;
+            transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(234, 255, 0, 0.1);
+        }
+        .gallery-item:hover img { transform: scale(1.03); }
+
+        footer { padding: 30px; text-align: center; border-top: 1px solid #222; color: var(--text-muted); font-size: 0.8rem; background: #0D0D0D; margin-top: auto; }
+
+        /* Duyarlılık Ayarları */
+        @media (max-width: 1024px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .project-info-grid { grid-template-columns: 1fr; gap: 40px; }
+            .project-title { font-size: 2.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .hamburger { display: block; }
+            
+            nav {
+                display: flex; position: fixed; left: -100%; top: 0; flex-direction: column;
+                background-color: rgba(13, 13, 13, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                width: 100%; height: 100%; justify-content: center; align-items: center; transition: 0.3s; z-index: 1000;
+            }
+            nav.active { left: 0; }
+            nav ul { flex-direction: column; background: none; padding: 0; gap: 40px; border: none; backdrop-filter: none; align-items: center; }
+            nav a { font-size: 1.5rem; font-weight: 700; }
+
+            .mobile-motto {
+                display: block; position: absolute; bottom: 60px;
+                font-family: 'Reenie Beanie', cursive; color: var(--accent); font-size: 1.8rem;
+                transform: rotate(-5deg); text-align: center; width: 100%; opacity: 0.8; pointer-events: none;
+            }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="bg-container">
+        <!-- Tech Grid Canvas -->
+        <canvas id="bg-animation"></canvas>
+    </div>
+
+    <header id="main-header">
+        <div class="logo">EMRE YILMAZKART_</div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <nav id="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="mobile-motto">faber est suae quisque fortunae</div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <a href="projects.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+        
+        <div class="project-header">
+            <h1 class="project-title">The Stamp Collection</h1>
+            <p class="project-subtitle">Digital Illustration | Personal Project</p>
+        </div>
+
+        <!-- ANA KAPAK GÖRSELİ -->
+        <div class="hero-image">
+            <img src="pul mock up.png" alt="The Stamp Collection Mockup">
+        </div>
+
+        <div class="project-info-grid">
+            <!-- Proje Künyesi -->
+            <div class="info-card">
+                <div class="info-item">
+                    <span class="info-label">Type</span>
+                    <span class="info-value">Personal Study / Hobby</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Subject</span>
+                    <span class="info-value">Istanbul Landmarks</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Year</span>
+                    <span class="info-value">2025</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tools Used</span>
+                    <span class="info-value">Illustrator, Photoshop</span>
+                </div>
+            </div>
+
+            <!-- Proje Metni -->
+            <div class="project-description">
+                <h3>The Concept: Philatelic Architecture</h3>
+                <p>
+                    <strong>The Stamp Collection</strong> is a personal exploration into the intersection of philatelic design and architectural heritage. Born as a hobby project, it reimagines iconic landmarks from Istanbul as minimalist, modern digital stamps.
+                </p>
+                <p>
+                    Utilizing <strong>Adobe Illustrator</strong> for precise vector drawing and <strong>Photoshop</strong> for realistic mockup texturing, the series focuses on capturing the essence of diverse structures—ranging from the historical splendor of the <strong>Topkapı Palace</strong> to the futuristic scale of <strong>IGA Airport</strong>.
+                </p>
+                <p>
+                    The project aims to simplify complex architectural forms into recognizable graphic icons, maintaining a consistent visual language that honors the traditional aesthetic of postage stamps while embracing a contemporary, multidisciplinary design approach.
+                </p>
+            </div>
+        </div>
+
+        <!-- PROJE GALERİSİ (Pulların tamamını gösteren yapı) -->
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="Topkapı Palace.png" alt="Topkapı Palace Stamp">
+            </div>
+            <div class="gallery-item">
+                <img src="Kariye Mosque.png" alt="Kariye Mosque Stamp">
+            </div>
+            <div class="gallery-item">
+                <img src="Istanbul Modern.png" alt="Istanbul Modern Stamp">
+            </div>
+            <div class="gallery-item">
+                <img src="IGA Airport 1.png" alt="IGA Airport View 1">
+            </div>
+            <div class="gallery-item">
+                <img src="IGA Airport 2.png" alt="IGA Airport View 2">
+            </div>
+            <div class="gallery-item">
+                <img src="Çukursaray.png" alt="Çukursaray Stamp">
+            </div>
+        </div>
+
+    </div>
+
+    <footer><p>&copy; 2026 Emre Yılmazkart.</p></footer>
+
+    <script>
+        function toggleMenu() {
+            const hamburger = document.querySelector(".hamburger");
+            const nav = document.getElementById("navbar");
+            hamburger.classList.toggle("active");
+            nav.classList.toggle("active");
+        }
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if(window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- TECH GRID ANIMATION ---
+        const canvas = document.getElementById('bg-animation');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let circles = [];
+        let realMouse = { x: undefined, y: undefined }; 
+        let effectMouse = { x: undefined, y: undefined }; 
+        let lastMouseMoveTime = Date.now(); 
+        let interactionRange = 120; 
+        
+        const darkColor = { r: 40, g: 40, b: 40 }; 
+        const neonColor = { r: 234, g: 255, b: 0 }; 
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            effectMouse.x = width / 2;
+            effectMouse.y = height / 2;
+            initGrid();
+        }
+        
+        function initGrid() {
+            circles = [];
+            const circleSize = 20; 
+            const cols = Math.floor(width / circleSize);
+            const rows = Math.floor(height / circleSize);
+            for (let y = 0; y <= rows; y++) {
+                for (let x = 0; x <= cols; x++) {
+                    circles.push(new TechCircle(x * circleSize + 10, y * circleSize + 10));
+                }
+            }
+        }
+
+        class TechCircle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.baseRadius = 1.5; this.currentRadius = 1.5; this.intensity = 0;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2);
+                const r = darkColor.r + (neonColor.r - darkColor.r) * this.intensity;
+                const g = darkColor.g + (neonColor.g - darkColor.g) * this.intensity;
+                const b = darkColor.b + (neonColor.b - darkColor.b) * this.intensity;
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                ctx.fill();
+            }
+            update() {
+                let dx = effectMouse.x - this.x;
+                let dy = effectMouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let targetIntensity = 0; let targetRadius = this.baseRadius;
+                if (distance < interactionRange) {
+                    targetIntensity = 1 - (distance / interactionRange);
+                    targetRadius = 8 - (distance / interactionRange) * 6; 
+                }
+                this.intensity += (targetIntensity - this.intensity) * 0.15; 
+                this.currentRadius += (targetRadius - this.currentRadius) * 0.15;
+                this.draw();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            const now = Date.now();
+            const timeSinceLastMove = now - lastMouseMoveTime;
+            if (timeSinceLastMove > 2000) { 
+                const t = now * 0.001; 
+                const autoX = (width / 2) + Math.sin(t) * (width / 3);
+                const autoY = (height / 2) + Math.cos(t * 1.5) * (height / 4);
+                effectMouse.x += (autoX - effectMouse.x) * 0.05;
+                effectMouse.y += (autoY - effectMouse.y) * 0.05;
+                interactionRange = 130 + Math.sin(now * 0.003) * 50;
+            } else {
+                if(realMouse.x !== undefined) {
+                    effectMouse.x += (realMouse.x - effectMouse.x) * 0.2;
+                    effectMouse.y += (realMouse.y - effectMouse.y) * 0.2;
+                }
+                interactionRange += (120 - interactionRange) * 0.1;
+            }
+            circles.forEach(c => c.update());
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', (e) => { 
+            realMouse.x = e.clientX; realMouse.y = e.clientY; 
+            lastMouseMoveTime = Date.now(); 
+        });
+        resize(); animate();
+    </script>
+</body>
+</html>

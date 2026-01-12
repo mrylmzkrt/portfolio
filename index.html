@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emre Yılmazkart | Multidisciplinary Designer</title>
+    
+    <!-- El Yazısı Fontu (Mobil Motto, Sketchy Words ve Footer İçin) -->
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <!-- İkonlar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ORTAK CSS (TECH THEME) --- */
+        :root { --bg-main: #0D0D0D; --bg-card: #1A1A1A; --accent: #EAFF00; --text-main: #FFFFFF; --text-muted: #B3B3B3; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; line-height: 1.6; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        /* --- BACKGROUND --- */
+        #bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-color: var(--bg-main); 
+        }
+        #bg-animation { width: 100%; height: 100%; opacity: 0.6; }
+
+        /* --- HEADER --- */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: transparent; position: sticky; top: 0; z-index: 1000;}
+        .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; }
+        
+        .hamburger { display: none; cursor: pointer; z-index: 1001; }
+        .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: #fff; }
+
+        nav ul { display: flex; list-style: none; gap: 20px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 30px; backdrop-filter: blur(5px); transition: 0.3s; }
+        nav a { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+        nav a:hover, nav a.active { color: var(--accent); }
+
+        .mobile-motto { display: none; }
+
+        /* --- HERO SECTION --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
+        
+        .hero { 
+            min-height: 85vh; 
+            display: grid; 
+            grid-template-columns: 1.2fr 0.8fr; 
+            align-items: center; 
+            gap: 60px;
+            position: relative; 
+        }
+
+        /* Giriş Animasyonu */
+        .hero-content h1, .hero-content p, .hero-content .btn-container, .profile-section {
+            opacity: 0;
+            transform: translateY(30px);
+            filter: blur(10px);
+            transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease;
+        }
+
+        .visible { opacity: 1 !important; transform: translateY(0) !important; filter: blur(0) !important; }
+
+        /* Yazı Stilleri */
+        .hero h1 { 
+            background: rgba(0, 0, 0, 0.1); 
+            border: 1px solid rgba(234, 255, 0, 0.1); 
+            display: inline-block; 
+            width: fit-content;
+            padding: 15px 25px; 
+            backdrop-filter: blur(4px); 
+            border-radius: 12px;
+            font-size: 4.5rem; 
+            line-height: 1.1; 
+            margin-bottom: 20px; 
+            font-weight: 800; 
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+        .hero span { color: var(--accent); text-shadow: 0 0 25px rgba(234, 255, 0, 0.4); }
+        
+        .hero p { 
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(234, 255, 0, 0.1); 
+            border-radius: 8px;
+            display: inline-block;
+            padding: 15px 20px;
+            backdrop-filter: blur(4px);
+            color: #ddd; 
+            max-width: 650px; 
+            margin-bottom: 30px; 
+            font-size: 1.2rem; 
+        }
+        
+        .btn { 
+            background: transparent; color: #fff; padding: 16px 40px; font-weight: bold; display: inline-block; 
+            text-transform: uppercase; transition: all 0.5s ease; 
+            border: 1px solid var(--accent); cursor: pointer; letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+        }
+        .btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px rgba(234, 255, 0, 0.5); }
+
+        .more-link { margin-left: 20px; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .more-link:hover { color: #fff; text-decoration: underline; }
+
+        /* --- PROFILE IMAGE & SKETCHY WORDS (FROM ABOUT) --- */
+        .profile-section {
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        .profile-image-container {
+            position: relative; 
+            display: block; 
+            width: 100%;
+            cursor: pointer;
+            overflow: hidden; 
+            line-height: 0; 
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .profile-image-container::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .profile-image-container:hover::after { opacity: 0.4; }
+
+        .profile-img { 
+            width: 100%; 
+            aspect-ratio: 3/4; 
+            background-color: #222; 
+            border: 1px solid #333; 
+            object-fit: cover; 
+            filter: brightness(110%) contrast(100%); 
+            transition: all 0.5s ease; 
+            display: block; 
+        }
+
+        .sketchy-words {
+            position: absolute;
+            top: 30px;  
+            left: 20px; 
+            display: flex;
+            flex-direction: column; 
+            gap: 2px;       
+            font-family: 'Reenie Beanie', cursive;
+            font-size: 2.2rem; 
+            color: var(--accent);
+            transform: rotate(-5deg); 
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            line-height: 0.9; 
+            pointer-events: none; 
+        }
+
+        .sketchy-words span {
+            opacity: 0; 
+            display: inline-block;
+            filter: blur(2px);
+            transform: translateX(-10px); 
+            animation: wordAppear 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            transition: color 0.5s ease;
+        }
+
+        .profile-image-container:hover .sketchy-words span { color: #000; text-shadow: none; }
+
+        .sketchy-words span:nth-child(1) { animation-delay: 1.2s; }
+        .sketchy-words span:nth-child(2) { animation-delay: 1.5s; }
+        .sketchy-words span:nth-child(3) { animation-delay: 1.8s; }
+        .sketchy-words span:nth-child(4) { animation-delay: 2.1s; }
+        .sketchy-words span:nth-child(5) { animation-delay: 2.4s; }
+
+        @keyframes wordAppear {
+            to { opacity: 1; filter: blur(0); transform: translateX(0); }
+        }
+
+        /* --- FOOTER --- */
+        footer { padding: 40px; text-align: center; border-top: 1px solid #333; background: #0D0D0D; position: relative; width: 100%; }
+        footer p { 
+            font-family: 'Reenie Beanie', cursive; 
+            color: var(--accent); 
+            font-size: 1.8rem; 
+            margin: 0;
+            opacity: 0.8;
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 992px) {
+            .hero { grid-template-columns: 1fr; gap: 40px; padding-top: 60px; text-align: center; }
+            .hero h1, .hero p, .hero-content .btn-container { margin-left: auto; margin-right: auto; }
+            .profile-section { max-width: 400px; margin: 0 auto; }
+            .hero h1 { font-size: 3.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            nav {
+                display: flex; position: fixed; left: -100%; top: 0; flex-direction: column;
+                background-color: rgba(13, 13, 13, 0.7); backdrop-filter: blur(20px); width: 100%; height: 100%;
+                justify-content: center; align-items: center; transition: 0.3s; z-index: 1000;
+            }
+            nav.active { left: 0; }
+            nav ul { flex-direction: column; background: none; padding: 0; gap: 40px; border: none; align-items: center; }
+            nav a { font-size: 1.5rem; font-weight: 700; }
+            .mobile-motto {
+                display: block; position: absolute; bottom: 60px;
+                font-family: 'Reenie Beanie', cursive; color: var(--accent); font-size: 1.8rem;
+                transform: rotate(-5deg); text-align: center; width: 100%; opacity: 0.8; pointer-events: none;
+            }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+            
+            .hero h1 { font-size: 2.8rem; letter-spacing: -1px; }
+            .hero p { font-size: 1rem; }
+            .btn { display: block; width: 100%; margin-bottom: 20px; }
+            .more-link { display: block; margin: 0; }
+            .sketchy-words { font-size: 1.6rem; top: 20px; left: 15px; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="bg-container">
+        <canvas id="bg-animation"></canvas>
+    </div>
+
+    <header>
+        <div class="logo">EMRE YILMAZKART_</div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <nav id="navbar">
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="mobile-motto">faber est suae quisque fortunae</div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <!-- SOL: METİN İÇERİĞİ -->
+            <div class="hero-content">
+                <h1 id="hero-title">Designing<br><span id="accent-text">Realities.</span></h1>
+                <p id="hero-desc">Hello. I am Emre. Multidisciplinary Designer based in Istanbul. Bridging the gap between architectural precision and digital experiences.</p>
+                <div class="btn-container" id="hero-btns">
+                    <a href="projects.html" class="btn">View Works</a>
+                    <a href="about.html" class="more-link">More About Me &rarr;</a>
+                </div>
+            </div>
+
+            <!-- SAĞ: PROFİL GÖRSELİ VE ANİMASYON (FROM ABOUT) -->
+            <div class="profile-section" id="hero-image">
+                <div class="profile-image-container">
+                    <img src="profile.jpg" alt="Emre Yilmazkart Profile" class="profile-img">
+                    <div class="sketchy-words">
+                        <span>faber</span><span>est</span><span>suae</span><span>quisque</span><span>fortunae</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer><p>2026, Emre Yılmazkart</p></footer>
+
+    <script>
+        function toggleMenu() {
+            const hamburger = document.querySelector(".hamburger");
+            const nav = document.getElementById("navbar");
+            hamburger.classList.toggle("active");
+            nav.classList.toggle("active");
+        }
+
+        // --- GİRİŞ ANİMASYONU ---
+        window.addEventListener('load', () => {
+            const title = document.getElementById('hero-title');
+            const desc = document.getElementById('hero-desc');
+            const btns = document.getElementById('hero-btns');
+            const img = document.getElementById('hero-image');
+            
+            setTimeout(() => { title.classList.add('visible'); }, 300);
+            setTimeout(() => { desc.classList.add('visible'); }, 600);
+            setTimeout(() => { btns.classList.add('visible'); }, 900);
+            setTimeout(() => { img.classList.add('visible'); }, 1200);
+        });
+
+        // --- TECH GRID ANIMATION ---
+        const canvas = document.getElementById('bg-animation');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let circles = [];
+        let realMouse = { x: undefined, y: undefined }; 
+        let effectMouse = { x: undefined, y: undefined }; 
+        let lastMouseMoveTime = Date.now(); 
+        let interactionRange = 120; 
+        
+        const titleEl = document.getElementById('hero-title');
+        const descEl = document.getElementById('hero-desc');
+
+        const darkColor = { r: 40, g: 40, b: 40 }; 
+        const neonColor = { r: 234, g: 255, b: 0 }; 
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            effectMouse.x = width / 2;
+            effectMouse.y = height / 2;
+            initGrid();
+        }
+        
+        function initGrid() {
+            circles = [];
+            const circleSize = 20; 
+            const cols = Math.floor(width / circleSize);
+            const rows = Math.floor(height / circleSize);
+            for (let y = 0; y <= rows; y++) {
+                for (let x = 0; x <= cols; x++) {
+                    circles.push(new TechCircle(x * circleSize + 10, y * circleSize + 10));
+                }
+            }
+        }
+
+        class TechCircle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.baseRadius = 1.5; this.currentRadius = 1.5; this.intensity = 0;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2);
+                const r = darkColor.r + (neonColor.r - darkColor.r) * this.intensity;
+                const g = darkColor.g + (neonColor.g - darkColor.g) * this.intensity;
+                const b = darkColor.b + (neonColor.b - darkColor.b) * this.intensity;
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`; ctx.fill();
+            }
+            update() {
+                let dx = effectMouse.x - this.x; let dy = effectMouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let targetIntensity = 0; let targetRadius = this.baseRadius;
+                if (distance < interactionRange) {
+                    targetIntensity = 1 - (distance / interactionRange);
+                    targetRadius = 8 - (distance / interactionRange) * 6; 
+                }
+                this.intensity += (targetIntensity - this.intensity) * 0.15; 
+                this.currentRadius += (targetRadius - this.currentRadius) * 0.15;
+                this.draw();
+            }
+        }
+
+        function updateElementGlow() {
+            const elements = [titleEl, descEl];
+            elements.forEach(el => {
+                if(!el) return;
+                const rect = el.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const dist = Math.hypot(effectMouse.x - centerX, effectMouse.y - centerY);
+                const triggerDistance = interactionRange * 1.5; 
+                let intensity = 0.1; let glowSize = 0;
+                if (dist < triggerDistance) {
+                    const factor = 1 - (dist / triggerDistance);
+                    intensity = 0.1 + (factor * 0.9); 
+                    glowSize = factor * 25; 
+                }
+                el.style.borderColor = `rgba(234, 255, 0, ${intensity})`;
+                el.style.boxShadow = `0 0 ${glowSize}px rgba(234, 255, 0, ${intensity * 0.4})`;
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            const now = Date.now();
+            const timeSinceLastMove = now - lastMouseMoveTime;
+            if (timeSinceLastMove > 2000) { 
+                const t = now * 0.001; 
+                const autoX = (width / 2) + Math.sin(t) * (width / 3);
+                const autoY = (height / 2) + Math.cos(t * 1.5) * (height / 4);
+                effectMouse.x += (autoX - effectMouse.x) * 0.05;
+                effectMouse.y += (autoY - effectMouse.y) * 0.05;
+                interactionRange = 130 + Math.sin(now * 0.003) * 50;
+            } else {
+                if(realMouse.x !== undefined) {
+                    effectMouse.x += (realMouse.x - effectMouse.x) * 0.2;
+                    effectMouse.y += (realMouse.y - effectMouse.y) * 0.2;
+                }
+                interactionRange += (120 - interactionRange) * 0.1;
+            }
+            circles.forEach(c => c.update());
+            updateElementGlow();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', (e) => { 
+            realMouse.x = e.clientX; realMouse.y = e.clientY; 
+            lastMouseMoveTime = Date.now(); 
+        });
+        resize(); animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emre Yılmazkart | Dere Culture Center</title>
+    
+    <!-- Fontlar -->
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- ORTAK CSS (TECH THEME) --- */
+        :root { --bg-main: #0D0D0D; --bg-card: #1A1A1A; --accent: #EAFF00; --text-main: #FFFFFF; --text-muted: #B3B3B3; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; line-height: 1.6; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        /* --- BACKGROUND --- */
+        #bg-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background-color: var(--bg-main); 
+        }
+        #bg-animation { width: 100%; height: 100%; opacity: 0.6; }
+
+        /* --- HEADER --- */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: transparent; position: sticky; top: 0; z-index: 1000; transition: all 0.4s ease-in-out;}
+        header.scrolled { background: rgba(13, 13, 13, 0.9); backdrop-filter: blur(15px); padding: 15px 5%; border-bottom: 1px solid #333; }
+        .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; }
+        
+        /* Hamburger Menü */
+        .hamburger { display: none; cursor: pointer; z-index: 1001; }
+        .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: #fff; }
+
+        /* Masaüstü Menü */
+        nav ul { display: flex; list-style: none; gap: 20px; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 30px; backdrop-filter: blur(5px); transition: 0.3s; }
+        nav a { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
+        nav a:hover, nav a.active { color: var(--accent); }
+
+        .mobile-motto { display: none; }
+
+        /* --- PROJECT DETAIL CONTENT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 100px 5% 60px; z-index: 2; position: relative; }
+        
+        .back-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; }
+        .back-link:hover { color: var(--accent); }
+
+        /* Başlık Alanı */
+        .project-header { margin-bottom: 50px; }
+        .project-title { font-size: 3.5rem; color: #fff; line-height: 1.1; margin-bottom: 10px; }
+        .project-subtitle { font-size: 1.2rem; color: var(--accent); font-weight: 300; letter-spacing: 1px; }
+
+        /* Render Videosu (İndirme engellendi) */
+        .hero-video-container {
+            width: 100%;
+            height: 70vh;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #000;
+        }
+        .hero-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Ana Görsel (Kapak) */
+        .hero-image {
+            width: 100%;
+            height: 70vh;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 60px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #000;
+        }
+        .hero-image img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            object-position: center 40%; 
+        }
+
+        /* Proje Bilgileri Grid */
+        .project-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        /* Sol: Künye */
+        .info-card {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            height: fit-content;
+        }
+        .info-item { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .info-item:last-child { border: none; margin: 0; padding: 0; }
+        .info-label { display: block; color: var(--accent); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .info-value { color: #fff; font-size: 1.1rem; }
+
+        /* Sağ: Metin */
+        .project-description h3 { font-size: 1.8rem; color: #fff; margin-bottom: 20px; }
+        .project-description p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 20px; line-height: 1.8; }
+
+        /* Galeri */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .gallery-item {
+            height: 450px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            background-color: #111;
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); filter: brightness(0.8); }
+        .gallery-item:hover img { transform: scale(1.05); filter: brightness(1); }
+
+        /* Teknik Çizimler ve Analizler İçin Özel Sınıf */
+        .gallery-item.full-width {
+            grid-column: span 2;
+            height: auto; 
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0; 
+            background-color: #050505;
+        }
+        .gallery-item.full-width img {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+            object-fit: contain; 
+            filter: brightness(1);
+        }
+
+        footer { padding: 40px; text-align: center; border-top: 1px solid #333; background: #0D0D0D; margin-top: auto;}
+        footer p { 
+            font-family: 'Reenie Beanie', cursive; 
+            color: var(--accent); 
+            font-size: 1.8rem; 
+            margin: 0;
+            opacity: 0.8;
+            transform: none;
+        }
+
+        /* Duyarlılık Ayarları */
+        @media (max-width: 900px) {
+            .project-info-grid { grid-template-columns: 1fr; gap: 40px; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-item.full-width { grid-column: span 1; min-height: auto; }
+            .project-title { font-size: 2.5rem; }
+            .hero-image, .hero-video-container { height: 45vh; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            nav {
+                display: flex; position: fixed; left: -100%; top: 0; flex-direction: column;
+                background-color: rgba(13, 13, 13, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                width: 100%; height: 100%; justify-content: center; align-items: center; transition: 0.3s; z-index: 1000;
+            }
+            nav.active { left: 0; }
+            nav ul { flex-direction: column; background: none; padding: 0; gap: 40px; border: none; align-items: center; }
+            nav a { font-size: 1.5rem; font-weight: 700; }
+            .mobile-motto {
+                display: block; position: absolute; bottom: 60px;
+                font-family: 'Reenie Beanie', cursive; color: var(--accent); font-size: 1.8rem;
+                transform: rotate(-5deg); text-align: center; width: 100%; opacity: 0.8; pointer-events: none;
+            }
+            .hamburger.active .bar:nth-child(2) { opacity: 0; }
+            .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="bg-container">
+        <canvas id="bg-animation"></canvas>
+    </div>
+
+    <header id="main-header">
+        <div class="logo">EMRE YILMAZKART_</div>
+        <div class="hamburger" onclick="toggleMenu()">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <nav id="navbar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="mobile-motto">faber est suae quisque fortunae</div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <a href="projects.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Projects</a>
+        
+        <div class="project-header">
+            <h1 class="project-title">Dere Culture Center</h1>
+            <p class="project-subtitle">Architectural Design | MIM201 Academic Project</p>
+        </div>
+
+        <!-- RENDER VİDEOSU (İndirme engellendi, sağ tık kapatıldı) -->
+        <div class="hero-video-container">
+            <video autoplay loop playsinline controls controlsList="nodownload" oncontextmenu="return false;">
+                <source src="dere video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- ANA KAPAK GÖRSELİ -->
+        <div class="hero-image">
+            <img src="dkmkapak2.png" alt="Dere Culture Center Main Render">
+        </div>
+
+        <div class="project-info-grid">
+            <!-- Proje Künyesi -->
+            <div class="info-card">
+                <div class="info-item">
+                    <span class="info-label">Context</span>
+                    <span class="info-value">YTÜ Architecture (MIM201)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">Kadikoy, Istanbul</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Year</span>
+                    <span class="info-value">2024</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tools Used</span>
+                    <span class="info-value">Revit, Enscape, Photoshop</span>
+                </div>
+            </div>
+
+            <!-- Proje Metni -->
+            <div class="project-description">
+                <h3>The Concept: Urban Intersection</h3>
+                <p>
+                    <strong>Dere Culture Center</strong> is a strategic urban intervention located at the vital junction of Söğütlüçeşme Marmaray station. As part of the <strong>MIM201 design studio</strong>, this project aims to provide a new breathing space for Kadıköy's vibrant and creative soul.
+                </p>
+                <p>
+                    Developed using a complete <strong>Revit to Enscape</strong> workflow, the design focuses on vertical connectivity and public permeability. The building acts as a bridge between the intense transit hub and the artistic textures of the neighborhood.
+                </p>
+                <p>
+                    The architectural language emphasizes transparency and light, utilizing parametric facade elements to regulate solar gain while maintaining visual connection with the urban flow. It is a social node that invites Kadıköy's residents to gather and create.
+                </p>
+            </div>
+        </div>
+
+        <!-- PROJE GALERİSİ -->
+        <div class="gallery-grid">
+            <!-- 1. ESKİ KAPAK FOTOĞRAFI -->
+            <div class="gallery-item full-width">
+                <img src="dkm kapak.png" alt="Dere Culture Center Alternative View">
+            </div>
+
+            <!-- 2. ANALİZ ÇİZİMİ -->
+            <div class="gallery-item full-width">
+                <img src="analiz dkm.png" alt="Architectural Analysis">
+            </div>
+
+            <!-- 3. PLAN ÇİZİMİ -->
+            <div class="gallery-item full-width">
+                <img src="dere plan.png" alt="Architectural Floor Plan">
+            </div>
+
+            <!-- 4. KESİT ÇİZİMİ (B-B) -->
+            <div class="gallery-item full-width">
+                <img src="bbkesitdkm.png" alt="Architectural Section B-B">
+            </div>
+
+            <!-- 5. KESİT ÇİZİMİ (A-A) -->
+            <div class="gallery-item full-width">
+                <img src="aakesitdkm.png" alt="Architectural Section A-A">
+            </div>
+
+            <!-- 6. DETAY ÇİZİMİ -->
+            <div class="gallery-item full-width">
+                <img src="detaildkm.png" alt="Technical Detail Drawing 1">
+            </div>
+
+            <!-- 7. DİĞER DETAY ÇİZİMİ -->
+            <div class="gallery-item full-width">
+                <img src="dkm detail.png" alt="Architectural Detail Drawing 2">
+            </div>
+
+            <!-- 8. RENDER NO 2 -->
+            <div class="gallery-item full-width">
+                <img src="RENDER NO 2.png" alt="Main Interior Perspective">
+            </div>
+            
+            <!-- 9. İÇ MEKAN RENDERI -->
+            <div class="gallery-item">
+                <img src="dkm iç.png" alt="Interior Render View">
+            </div>
+
+            <!-- 10. RESTORAN/DINLENME ALANI RENDERI -->
+            <div class="gallery-item">
+                <img src="dkmrest.png" alt="Rest/Dining Area View">
+            </div>
+
+            <!-- 11. DİĞER GÖRSELLER -->
+            <div class="gallery-item">
+                <img src="dkm sketch.png" alt="Concept Sketch">
+            </div>
+            <div class="gallery-item">
+                <img src="dkm front view.png" alt="Front Elevation View">
+            </div>
+            <div class="gallery-item">
+                <img src="dkm dış cephe.png" alt="Facade Detail">
+            </div>
+            <div class="gallery-item">
+                <img src="dkm.png" alt="Interior Perspective">
+            </div>
+        </div>
+
+    </div>
+
+    <footer><p>2026, Emre Yılmazkart</p></footer>
+
+    <script>
+        function toggleMenu() {
+            const hamburger = document.querySelector(".hamburger");
+            const nav = document.getElementById("navbar");
+            hamburger.classList.toggle("active");
+            nav.classList.toggle("active");
+        }
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if(window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- TECH GRID ANIMATION ---
+        const canvas = document.getElementById('bg-animation');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let circles = [];
+        let realMouse = { x: undefined, y: undefined }; 
+        let effectMouse = { x: undefined, y: undefined }; 
+        let lastMouseMoveTime = Date.now(); 
+        let interactionRange = 120; 
+        
+        const darkColor = { r: 40, g: 40, b: 40 }; 
+        const neonColor = { r: 234, g: 255, b: 0 }; 
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            effectMouse.x = width / 2;
+            effectMouse.y = height / 2;
+            initGrid();
+        }
+        
+        function initGrid() {
+            circles = [];
+            const circleSize = 20; 
+            const cols = Math.floor(width / circleSize);
+            const rows = Math.floor(height / circleSize);
+            for (let y = 0; y <= rows; y++) {
+                for (let x = 0; x <= cols; x++) {
+                    circles.push(new TechCircle(x * circleSize + 10, y * circleSize + 10));
+                }
+            }
+        }
+
+        class TechCircle {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.baseRadius = 1.5; this.currentRadius = 1.5; this.intensity = 0;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.currentRadius, 0, Math.PI * 2);
+                const r = darkColor.r + (neonColor.r - darkColor.r) * this.intensity;
+                const g = darkColor.g + (neonColor.g - darkColor.g) * this.intensity;
+                const b = darkColor.b + (neonColor.b - darkColor.b) * this.intensity;
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`; ctx.fill();
+            }
+            update() {
+                let dx = effectMouse.x - this.x; let dy = effectMouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let targetIntensity = 0; let targetRadius = this.baseRadius;
+                if (distance < interactionRange) {
+                    targetIntensity = 1 - (distance / interactionRange);
+                    targetRadius = 8 - (distance / interactionRange) * 6; 
+                }
+                this.intensity += (targetIntensity - this.intensity) * 0.15; 
+                this.currentRadius += (targetRadius - this.currentRadius) * 0.15;
+                this.draw();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            const now = Date.now();
+            const timeSinceLastMove = now - lastMouseMoveTime;
+            if (timeSinceLastMove > 2000) { 
+                const t = now * 0.001; 
+                const autoX = (width / 2) + Math.sin(t) * (width / 3);
+                const autoY = (height / 2) + Math.cos(t * 1.5) * (height / 4);
+                effectMouse.x += (autoX - effectMouse.x) * 0.05;
+                effectMouse.y += (autoY - effectMouse.y) * 0.05;
+                interactionRange = 130 + Math.sin(now * 0.003) * 50;
+            } else {
+                if(realMouse.x !== undefined) {
+                    effectMouse.x += (realMouse.x - effectMouse.x) * 0.2;
+                    effectMouse.y += (realMouse.y - effectMouse.y) * 0.2;
+                }
+                interactionRange += (120 - interactionRange) * 0.1;
+            }
+            circles.forEach(c => c.update());
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', (e) => { 
+            realMouse.x = e.clientX; realMouse.y = e.clientY; 
+            lastMouseMoveTime = Date.now(); 
+        });
+        resize(); animate();
+    </script>
+</body>
+</html>
