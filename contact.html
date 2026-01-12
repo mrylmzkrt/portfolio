@@ -257,20 +257,19 @@
                 <p>Have a project in mind or just want to say hello? I'm always open to discussing new ideas and opportunities.</p>
             </div>
 
-            <!-- 
-                FORMSUBMIT ENTEGRASYONU - DÜZELTİLDİ
-                Sorun gidermek için '_next' satırını kaldırdık. 
-                Form başarıyla gönderilirse varsayılan yeşil "Success" sayfası açılacak.
-            -->
+            <!-- FORMSUBMIT ENTEGRASYONU -->
             <form action="https://formsubmit.co/yilmazkart@icloud.com" method="POST">
                 
-                <!-- Konu Başlığı -->
-                <input type="hidden" name="_subject" value="New Portfolio Contact Message!">
+                <!-- 
+                   YÖNLENDİRME (REDIRECT) AYARI:
+                   Bu satır, form başarıyla gönderildiğinde kullanıcıyı sizin özel teşekkür sayfanıza yönlendirir.
+                   Eğer alan adınız (emreyilmazkart.com) henüz aktif değilse, GitHub Pages adresinizi kullanın.
+                   Örn: https://kullaniciadi.github.io/repo-adi/thank-you.html
+                -->
+                <input type="hidden" name="_next" value="https://www.emreyilmazkart.com/thank-you.html">
                 
-                <!-- Spam Koruması -->
+                <input type="hidden" name="_subject" value="New Portfolio Contact Message!">
                 <input type="hidden" name="_captcha" value="false">
-
-                <!-- Template -->
                 <input type="hidden" name="_template" value="table">
 
                 <div class="form-group">
