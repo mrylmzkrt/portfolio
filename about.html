@@ -17,6 +17,32 @@
         body { background-color: var(--bg-main); color: var(--text-main); font-family: 'Segoe UI', sans-serif; line-height: 1.6; position: relative; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         
+        /* --- DİNAMİK SCROLLBAR (Sadece kaydırınca görünür) --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        /* Varsayılan: Görünmez */
+        ::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border-radius: 10px;
+            border: 2px solid transparent;
+        }
+
+        /* Kaydırma Algılandığında (JS ile tetiklenir) */
+        html.is-scrolling ::-webkit-scrollbar-thumb {
+            background-color: var(--accent);
+            border: 2px solid var(--bg-main);
+        }
+
+        html.is-scrolling ::-webkit-scrollbar-thumb:hover {
+            background-color: #fff;
+        }
+        
         /* --- DÖNEN KENARLIK İÇİN DEĞİŞKEN TANIMI --- */
         @property --angle {
             syntax: '<angle>';
@@ -53,6 +79,14 @@
         }
 
         .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; }
+        
+        /* Logo Alt Çizgi Animasyonu */
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
         
         .hamburger { display: none; cursor: pointer; z-index: 1001; }
         .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: #fff; }
@@ -160,7 +194,7 @@
     </div>
 
     <header id="main-header">
-        <div class="logo">EMRE YILMAZKART_</div>
+        <div class="logo">EMRE YILMAZKART<span class="blink">_</span></div>
         <div class="hamburger" onclick="toggleMenu()">
             <span class="bar"></span><span class="bar"></span><span class="bar"></span>
         </div>
@@ -242,10 +276,23 @@
             nav.classList.toggle("active");
         }
 
+        // --- SCROLLBAR GÖRÜNÜRLÜĞÜ & HEADER SCROLL ---
+        let isScrolling;
         window.addEventListener('scroll', () => {
+            // Scrollbar mantığı
+            document.documentElement.classList.add('is-scrolling');
+            window.clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
+                document.documentElement.classList.remove('is-scrolling');
+            }, 1000);
+
+            // Header mantığı
             const header = document.getElementById('main-header');
-            if(window.scrollY > 50) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
+            if(window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
         });
 
         const canvas = document.getElementById('bg-animation');

@@ -7,7 +7,7 @@
     
     <!-- İkonlar için FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- El Yazısı Fontu (Footer İçin) -->
+    <!-- El Yazısı Fontu (Footer ve Mobil Motto İçin) -->
     <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
 
     <style>
@@ -34,7 +34,7 @@
         /* --- HEADER --- */
         header { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 25px 5%; 
+            padding: 20px 5%; /* index.html ile eşitlendi */
             background: transparent; 
             border-bottom: 1px solid transparent;
             position: fixed; 
@@ -54,17 +54,25 @@
 
         .logo { font-size: 1.3rem; font-weight: bold; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1001; }
         
+        /* Logo Alt Çizgi Animasyonu (index.html'den alındı) */
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
         .hamburger { display: none; cursor: pointer; z-index: 1001; }
         .bar { display: block; width: 25px; height: 3px; margin: 5px auto; transition: all 0.3s ease-in-out; background-color: #fff; }
 
         nav ul { 
             display: flex; list-style: none; gap: 20px; 
-            background: rgba(20, 20, 20, 0.6); 
-            padding: 10px 25px; 
+            background: rgba(0,0,0,0.5); /* index.html ile eşitlendi */
+            padding: 10px 20px; /* index.html ile eşitlendi */
             border-radius: 30px; 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.4s ease-in-out; 
+            backdrop-filter: blur(5px); /* index.html ile eşitlendi */
+            border: 1px solid rgba(255,255,255,0.05); /* index.html ile eşitlendi */
+            transition: all 0.3s; /* index.html ile eşitlendi */
         }
 
         header.scrolled nav ul {
@@ -74,6 +82,9 @@
         nav a { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); }
         nav a:hover, nav a.active { color: var(--accent); text-shadow: 0 0 5px rgba(234, 255, 0, 0.5); }
         
+        /* Mobil Motto (Başlangıçta Gizli) */
+        .mobile-motto { display: none; }
+
         /* --- FOOTER --- */
         footer { padding: 40px; text-align: center; border-top: 1px solid #333; background: #0D0D0D; margin-top: auto;}
         footer p { 
@@ -209,12 +220,28 @@
             .hamburger { display: block; }
             nav {
                 position: fixed; left: -100%; top: 0; flex-direction: column;
-                background-color: rgba(13, 13, 13, 0.98); width: 100%; height: 100%;
-                justify-content: center; transition: 0.3s; z-index: 1000;
+                background-color: rgba(13, 13, 13, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+                width: 100%; height: 100%;
+                justify-content: center; align-items: center; transition: 0.3s; z-index: 1000;
             }
             nav.active { left: 0; }
-            nav ul { flex-direction: column; background: none; padding: 0; gap: 40px; border: none; backdrop-filter: none; }
+            nav ul { flex-direction: column; background: none; padding: 0; gap: 40px; border: none; backdrop-filter: none; align-items: center; }
             nav a { font-size: 1.5rem; font-weight: 700; }
+
+            .mobile-motto {
+                display: block;
+                position: absolute;
+                bottom: 60px;
+                font-family: 'Reenie Beanie', cursive;
+                color: var(--accent);
+                font-size: 1.8rem;
+                transform: rotate(-5deg);
+                text-align: center;
+                width: 100%;
+                opacity: 0.8;
+                text-shadow: 0 0 10px rgba(0,0,0,0.5);
+                pointer-events: none;
+            }
             
             .hamburger.active .bar:nth-child(2) { opacity: 0; }
             .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
@@ -230,7 +257,7 @@
     </div>
 
     <header id="main-header">
-        <div class="logo">EMRE YILMAZKART_</div>
+        <div class="logo">EMRE YILMAZKART<span class="blink">_</span></div>
         
         <div class="hamburger" onclick="toggleMenu()">
             <span class="bar"></span>
@@ -245,6 +272,8 @@
                 <li><a href="about.html">About</a></li>
                 <li><a href="contact.html" class="active">Contact</a></li>
             </ul>
+            <!-- Mobil Menü Mottosu -->
+            <div class="mobile-motto">faber est suae quisque fortunae</div>
         </nav>
     </header>
 
@@ -257,9 +286,21 @@
                 <p>Have a project in mind or just want to say hello? I'm always open to discussing new ideas and opportunities.</p>
             </div>
 
-            <!-- FORMSUBMIT AJAX ENTEGRASYONU -->
-            <form id="contact-form">
+            <!-- FORMSUBMIT ENTEGRASYONU -->
+            <form action="https://formsubmit.co/yilmazkart@icloud.com" method="POST">
                 
+                <!-- YÖNLENDİRME (REDIRECT) AYARI -->
+                <input type="hidden" name="_next" value="https://mrylmzkrt.github.io/thank-you.html">
+                
+                <!-- Konu Başlığı -->
+                <input type="hidden" name="_subject" value="New Portfolio Contact Message!">
+                
+                <!-- Spam Koruması -->
+                <input type="hidden" name="_captcha" value="false">
+
+                <!-- Template -->
+                <input type="hidden" name="_template" value="table">
+
                 <div class="form-group">
                     <label class="form-label">Name</label>
                     <input type="text" name="name" class="form-control" placeholder="Your Name" required>
@@ -317,41 +358,6 @@
             } else {
                 header.classList.remove('scrolled');
             }
-        });
-
-        // --- FORM GÖNDERME İŞLEMİ (AJAX ile) ---
-        const form = document.getElementById("contact-form");
-
-        form.addEventListener("submit", function(e) {
-            e.preventDefault(); // Sayfa yenilenmesini engelle
-
-            const submitBtn = document.querySelector(".btn-submit");
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = "Sending...";
-            submitBtn.disabled = true;
-
-            const formData = new FormData(form);
-
-            // FormSubmit AJAX endpoint
-            fetch("https://formsubmit.co/ajax/yilmazkart@icloud.com", {
-                method: "POST",
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(Object.fromEntries(formData))
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Başarılı olduğunda kendi thank-you sayfana yönlendir
-                window.location.href = "thank-you.html";
-            })
-            .catch(error => {
-                console.log(error);
-                alert("Bir hata oluştu. Lütfen daha sonra tekrar deneyin veya doğrudan mail atın.");
-                submitBtn.innerText = originalBtnText;
-                submitBtn.disabled = false;
-            });
         });
 
         // --- TECH GRID ANIMATION ---
